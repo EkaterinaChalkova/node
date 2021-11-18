@@ -1,36 +1,22 @@
-const colors = require("colors/safe");
-var x = process.argv[2];
-var z = process.argv[3];
+// формат даты "November 18 2021 16:47:34"
+// node index.js "November 22 2021 16:47:34" "November 26 2021 16:47:34"
+//количество оставшихся дней выводит,  не успеваю, полную версию пришлю позже.
 
-if (isNaN(x) || isNaN(z)) {
-  console.log(colors.red("Введите число"));
-  return;
+var datestart = process.argv[2];
+var datestart2 = process.argv[3];
+
+function getTimeRemaining(end) {
+  var t = Date.parse(end) - Date.parse(new Date());
+
+  var days = Math.floor(t / (1000 * 60 * 60 * 24));
+  return {
+    total: t,
+    days: days,
+  };
 }
 
-// var x = +process.argv[2];
-var counter = 1;
-var color = colors.green;
-while (+x <= +z) {
-  var y = 2;
-  while (+y <= +x) {
-    if (+x % y == 0) {
-      break;
-    }
-    y++;
-  }
+amountdays = getTimeRemaining(datestart).days;
+console.log(amountdays);
 
-  if (y == x) {
-    console.log(color(x + " простое число"));
-    counter++;
-    if (counter % 3 == 1) {
-      color = colors.green;
-    } else if (counter % 3 == 2) {
-      color = colors.yellow;
-    } else if (counter % 3 == 0) {
-      color = colors.red;
-    }
-  } else {
-    console.log(colors.red("В этом диапазоне нет простых чисел"));
-  }
-  x++;
-}
+amountdays = getTimeRemaining(datestart2).days;
+console.log(amountdays);
