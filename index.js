@@ -1,22 +1,55 @@
-// формат даты "November 18 2021 16:47:34"
-// node index.js "November 22 2021 16:47:34" "November 26 2021 16:47:34"
-//количество оставшихся дней выводит,  не успеваю, полную версию пришлю позже.
+// date fomat: "november 21 2021 20:57:54"
+var startDates = process.argv.slice(2).map((e) => {
+  return new Date(e).getTime();
+});
 
-var datestart = process.argv[2];
-var datestart2 = process.argv[3];
+const EventEmitter = require("events");
+const emitter = new EventEmitter();
 
-function getTimeRemaining(end) {
-  var t = Date.parse(end) - Date.parse(new Date());
+function countdown(startDate, i) {
+  let now = new Date().getTime();
+  let end = startDate - now;
+  let days = Math.floor(end / (1000 * 60 * 60 * 24));
+  let hours = Math.floor((end % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  let minutes = Math.floor((end % (1000 * 60 * 60)) / (1000 * 60));
+  let seconds = Math.floor((end % (1000 * 60)) / 1000);
 
-  var days = Math.floor(t / (1000 * 60 * 60 * 24));
-  return {
-    total: t,
-    days: days,
-  };
+  if (end < 0) {
+    //   clearInterval(tik);
+    console.log("Timer " + (i + 1) + ": Время вышло");
+  } else {
+    console.log(
+      "Timer " +
+        (i + 1) +
+        ": " +
+        days +
+        "д " +
+        hours +
+        "ч " +
+        minutes +
+        "м " +
+        seconds +
+        "с "
+    );
+  }
 }
 
-amountdays = getTimeRemaining(datestart).days;
-console.log(amountdays);
+// emitter.on("test", (p) => console.log(p));
+emitter.on("test", (startDates) =>
+  startDates.forEach((element, i) => countdown(element, i))
+);
 
-amountdays = getTimeRemaining(datestart2).days;
-console.log(amountdays);
+var a = setInterval(() => {
+  const dateObj = new Date();
+  var timers = startDates.length;
+  var end = startDates.length;
+  emitter.emit("test", startDates);
+  startDates.forEach((element) => {
+    if (element >= dateObj.getTime()) {
+      timers = timers - 1;
+    }
+  });
+  if (timers == end) {
+    clearInterval(a);
+  }
+}, 1000);
